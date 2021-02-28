@@ -1,0 +1,5 @@
+rootProject.name = 'slim-web-mapper'
+include 'api'
+include 'processor'
+include 'tests'
+
