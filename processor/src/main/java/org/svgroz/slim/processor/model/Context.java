@@ -38,7 +38,7 @@ public class Context {
     }
 
     public String getClassName() {
-        return className + "Impl";
+        return className;
     }
 
     public void setClassName(final String className) {

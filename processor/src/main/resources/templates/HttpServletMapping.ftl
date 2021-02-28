@@ -6,13 +6,15 @@ package ${ctx.packageName};
 import ${import};
 </#list>
 
-public class ${ctx.className} extends HttpServlet {
+public class ${ctx.className}ControllerServletIpml extends HttpServlet {
+    private ${ctx.className} ${ctx.className?uncap_first};
+
     <#list ctx.getMethods as get>
     private final Set<String> _${get.methodName}GetMappings = Set.of(
             <#list get.urls as url>
             "${url}"<#sep>,</#sep>
             </#list>
-        );
+    );
     </#list>
 
     <#list ctx.postMethods as get>
@@ -20,7 +22,7 @@ public class ${ctx.className} extends HttpServlet {
             <#list get.urls as url>
             "${url}"<#sep>,</#sep>
             </#list>
-        );
+    );
     </#list>
 
     <#if ctx.getMethods?size != 0>
@@ -28,10 +30,11 @@ public class ${ctx.className} extends HttpServlet {
     protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
         final String reqPath = req.getRequestURI();
         <#list ctx.getMethods as get>
-        {
+        if (_${get.methodName}GetMappings.contains(reqPath)) {
         <#list get.argumentList as arg>
             var _${arg.argumentName} = ${argTypeToMethod[arg.argumentType]}("${arg.argumentName}", req);
         </#list>
+            ${ctx.className?uncap_first}.${get.methodName}(<#list get.argumentList as arg>_${arg.argumentName}<#sep>, </#sep></#list>);
         }
         </#list>
     }
@@ -40,7 +43,15 @@ public class ${ctx.className} extends HttpServlet {
     <#if ctx.postMethods?size != 0>
     @Override
     protected void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
-
+         final String reqPath = req.getRequestURI();
+         <#list ctx.postMethods as post>
+         if (_${post.methodName}PostMappings.contains(reqPath)) {
+         <#list post.argumentList as arg>
+             var _${arg.argumentName} = ${argTypeToMethod[arg.argumentType]}("${arg.argumentName}", req);
+         </#list>
+             ${ctx.className?uncap_first}.${post.methodName}(<#list post.argumentList as arg>_${arg.argumentName}<#sep>, </#sep></#list>);
+         }
+         </#list>
     }
     </#if>
 

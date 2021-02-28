@@ -12,7 +12,13 @@ import java.math.BigDecimal;
  */
 @Controller
 public interface Foo {
-    @Get("hello")
+    @Get("hello1")
+    void doGetInFoo(@Parameter(value = "p1") String x);
+
+    @Get("hello2")
+    void doPostInFoo(@Parameter(value = "p2") String x, @Parameter("p3") BigDecimal y);
+
+    @Get("hello3")
     @Post({"there", "world"})
-    void doPostInFoo(@Parameter(value = "p1", required = false) String y, @Parameter("p2") BigDecimal z);
+    void doBothInFoo(@Parameter(value = "p1", required = false) String y, @Parameter("p2") BigDecimal z);
 }

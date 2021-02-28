@@ -85,7 +85,7 @@ public class CoreProcessor extends AbstractProcessor {
                 templateConfig.getTemplate("HttpServletMapping.ftl").process(Map.of("ctx", ctx), writer);
                 String classData = writer.toString();
                 messager.printMessage(Diagnostic.Kind.OTHER, "\n" + classData);
-                JavaFileObject classFile = filer.createSourceFile(ctx.getPackageName()+ "." + ctx.getClassName());
+                JavaFileObject classFile = filer.createSourceFile(ctx.getPackageName() + "." + ctx.getClassName() + "ControllerServletIpml");
                 Writer classWriter = classFile.openWriter();
                 classWriter.write(classData);
                 classWriter.flush();
