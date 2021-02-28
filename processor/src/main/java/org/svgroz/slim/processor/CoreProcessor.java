@@ -19,9 +19,12 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
+import javax.tools.JavaFileObject;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.io.Writer;
 import java.lang.annotation.Annotation;
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -72,14 +75,21 @@ public class CoreProcessor extends AbstractProcessor {
                             Optional.class.getName(),
                             Set.class.getName(),
                             SortedSet.class.getName(),
-                            TreeSet.class.getName()
+                            TreeSet.class.getName(),
+                            BigDecimal.class.getName()
                     )
             );
 
             try {
                 var writer = new StringWriter();
                 templateConfig.getTemplate("HttpServletMapping.ftl").process(Map.of("ctx", ctx), writer);
-                messager.printMessage(Diagnostic.Kind.OTHER, "\n" + writer.toString());
+                String classData = writer.toString();
+                messager.printMessage(Diagnostic.Kind.OTHER, "\n" + classData);
+                JavaFileObject classFile = filer.createSourceFile(ctx.getPackageName()+ "." + ctx.getClassName());
+                Writer classWriter = classFile.openWriter();
+                classWriter.write(classData);
+                classWriter.flush();
+                classWriter.close();
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }

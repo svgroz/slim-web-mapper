@@ -8,23 +8,19 @@ import ${import};
 
 public class ${ctx.className} extends HttpServlet {
     <#list ctx.getMethods as get>
-    private final SortedSet<String> _${get.methodName}GetMappings = new TreeSet<>(
-        Set.of(
+    private final Set<String> _${get.methodName}GetMappings = Set.of(
             <#list get.urls as url>
             "${url}"<#sep>,</#sep>
             </#list>
-        )
-    );
+        );
     </#list>
 
     <#list ctx.postMethods as get>
-    private final SortedSet<String> _${get.methodName}PostMappings = new TreeSet<>(
-        Set.of(
+    private final Set<String> _${get.methodName}PostMappings = Set.of(
             <#list get.urls as url>
             "${url}"<#sep>,</#sep>
             </#list>
-        )
-    );
+        );
     </#list>
 
     <#if ctx.getMethods?size != 0>
