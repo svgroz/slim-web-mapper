@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  * @author Simon Grozovsky svgroz@outlook.com
  */
 public class CoreProcessor extends AbstractProcessor {
-    private final Set<Class<? extends Annotation>> supportedClasses = Set.of(Controller.class, Get.class, Post.class, Parameter.class);
+    private final Set<Class<? extends Annotation>> supportedClasses = Set.of(Controller.class);
 
     private Types typeUtils;
     private Elements elementUtils;

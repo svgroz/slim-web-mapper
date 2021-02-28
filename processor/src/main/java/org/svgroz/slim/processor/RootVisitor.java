@@ -10,8 +10,6 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -36,22 +34,17 @@ public class RootVisitor extends BasicVisitor<Context, Void> {
         var packageName = e.getEnclosingElement().accept(new PackageVisitor(), null).orElseThrow(() -> new IllegalArgumentException("Could not find package of: " + e));
         ctx.setPackageName(packageName);
 
-        final List<Element> getMethods = new ArrayList<>();
-        final List<Element> postMethods = new ArrayList<>();
-
         for (final Element enclosedElement : e.getEnclosedElements()) {
             if (enclosedElement.getKind() != ElementKind.METHOD) {
                 continue;
             }
 
             if (enclosedElement.getAnnotation(Get.class) != null) {
-                getMethods.add(enclosedElement);
+                ctx.getGetMethods().add(enclosedElement.accept(new MethodVisitor(), null));
             } else if (enclosedElement.getAnnotation(Post.class) != null) {
-                postMethods.add(enclosedElement);
+                ctx.getPostMethods().add(enclosedElement.accept(new MethodVisitor(), null));
             }
         }
-
-
 
         messager.printMessage(Diagnostic.Kind.OTHER, "Class name is " + className);
         messager.printMessage(Diagnostic.Kind.OTHER, "Package name is " + packageName);

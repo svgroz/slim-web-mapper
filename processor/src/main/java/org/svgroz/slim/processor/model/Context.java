@@ -33,16 +33,8 @@ public class Context {
         return getMethods;
     }
 
-    public void setGetMethods(final List<Method> getMethods) {
-        this.getMethods = getMethods;
-    }
-
     public List<Method> getPostMethods() {
         return postMethods;
-    }
-
-    public void setPostMethods(final List<Method> postMethods) {
-        this.postMethods = postMethods;
     }
 
     @Override

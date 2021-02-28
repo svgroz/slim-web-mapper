@@ -23,10 +23,6 @@ public class Method {
         return argumentList;
     }
 
-    public void setArgumentList(final List<Argument> argumentList) {
-        this.argumentList = argumentList;
-    }
-
     @Override
     public String toString() {
         return new StringJoiner(", ", Method.class.getSimpleName() + "[", "]")
