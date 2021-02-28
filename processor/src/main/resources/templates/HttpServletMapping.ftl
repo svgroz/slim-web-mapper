@@ -49,7 +49,7 @@ public class ${ctx.className} extends HttpServlet {
     </#if>
 
     protected String getRequiredString(String name, HttpServletRequest req) {
-            return Optional.ofNullable(req.getParameter(name)).orElseThrow();
+        return Optional.ofNullable(req.getParameter(name)).orElseThrow();
     }
 
     protected String getOptionalString(String name, HttpServletRequest req) {
