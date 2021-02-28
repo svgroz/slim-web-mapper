@@ -11,15 +11,13 @@ import javax.lang.model.element.ExecutableElement;
 public class MethodVisitor extends BasicVisitor<Method, Void> {
     @Override
     public Method visitExecutable(final ExecutableElement e, final Void unused) {
-        var methodName = e.getSimpleName().toString();
-
-        for (final Element enclosedElement : e.getEnclosedElements()) {
-            var arg = enclosedElement.accept(new MethodArgumentVisitor(), null);
-
-        }
-
         var method = new Method();
+        var methodName = e.getSimpleName().toString();
         method.setMethodName(methodName);
+
+        for (final Element enclosedElement : e.getParameters()) {
+            method.getArgumentList().add(enclosedElement.accept(new MethodArgumentVisitor(), null));
+        }
 
         return method;
     }

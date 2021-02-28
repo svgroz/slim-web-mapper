@@ -1,9 +1,6 @@
 package org.svgroz.slim.processor;
 
 import org.svgroz.slim.api.Controller;
-import org.svgroz.slim.api.Get;
-import org.svgroz.slim.api.Parameter;
-import org.svgroz.slim.api.Post;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
@@ -15,6 +12,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
+import javax.tools.Diagnostic;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -44,7 +42,8 @@ public class CoreProcessor extends AbstractProcessor {
         var visitor = new RootVisitor(messager);
 
         for (final Element element : roundEnv.getElementsAnnotatedWithAny(supportedClasses)) {
-            visitor.visit(element);
+            var ctx = visitor.visit(element);
+            messager.printMessage(Diagnostic.Kind.OTHER, ctx.toString());
         }
 
         return false;
