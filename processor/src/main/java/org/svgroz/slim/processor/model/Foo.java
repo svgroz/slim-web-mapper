@@ -10,18 +10,38 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Optional;
 
 public class Foo extends HttpServlet {
     @Override
     protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
-        Optional.of(req.getParameter("// TODO")).orElseThrow();
-        super.doGet(req, resp);
+        final String reqPath = req.getRequestURI();
+        {
+            var _p1 = getOptionalString("p1", req);
+            var _p2 = getRequiredNumeric("p2", req);
+        }
     }
 
     @Override
     protected void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
-        super.doGet(req, resp);
+
+    }
+
+    protected String getRequiredString(String name, HttpServletRequest req) {
+        return Optional.ofNullable(req.getParameter(name)).orElseThrow();
+    }
+
+    protected String getOptionalString(String name, HttpServletRequest req) {
+        return Optional.ofNullable(req.getParameter(name)).orElseThrow();
+    }
+
+    protected BigDecimal getRequiredNumeric(String name, HttpServletRequest req) {
+        return Optional.ofNullable(req.getParameter(name)).map(BigDecimal::new).orElseThrow();
+    }
+
+    protected BigDecimal getOptionalNumeric(String name, HttpServletRequest req) {
+        return Optional.ofNullable(req.getParameter(name)).map(BigDecimal::new).orElse(null);
     }
 }
 

@@ -40,9 +40,11 @@ public class RootVisitor extends BasicVisitor<Context, Void> {
             }
 
             if (enclosedElement.getAnnotation(Get.class) != null) {
-                ctx.getGetMethods().add(enclosedElement.accept(new MethodVisitor(), null));
-            } else if (enclosedElement.getAnnotation(Post.class) != null) {
-                ctx.getPostMethods().add(enclosedElement.accept(new MethodVisitor(), null));
+                ctx.getGetMethods().add(enclosedElement.accept(new GetMethodVisitor(), null));
+            }
+
+            if (enclosedElement.getAnnotation(Post.class) != null) {
+                ctx.getPostMethods().add(enclosedElement.accept(new PostMethodVisitor(), null));
             }
         }
 

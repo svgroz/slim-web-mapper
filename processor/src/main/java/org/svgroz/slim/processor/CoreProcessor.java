@@ -25,6 +25,8 @@ import java.lang.annotation.Annotation;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 /**
@@ -67,7 +69,10 @@ public class CoreProcessor extends AbstractProcessor {
                             HttpServletRequest.class.getName(),
                             HttpServletResponse.class.getName(),
                             IOException.class.getName(),
-                            Optional.class.getName()
+                            Optional.class.getName(),
+                            Set.class.getName(),
+                            SortedSet.class.getName(),
+                            TreeSet.class.getName()
                     )
             );
 

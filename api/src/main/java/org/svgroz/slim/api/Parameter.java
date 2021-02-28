@@ -11,5 +11,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.SOURCE)
 public @interface Parameter {
-    String[] value() default {};
+    String value() default "";
+    boolean required() default true;
 }

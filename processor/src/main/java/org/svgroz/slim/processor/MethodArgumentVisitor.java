@@ -6,7 +6,6 @@ import org.svgroz.slim.processor.model.ArgumentType;
 
 import javax.lang.model.element.VariableElement;
 import java.math.BigDecimal;
-import java.util.Arrays;
 
 /**
  * @author Simon Grozovsky svgroz@outlook.com
@@ -22,9 +21,9 @@ public class MethodArgumentVisitor extends BasicVisitor<Argument, Void> {
         var type = e.asType().toString();
         final ArgumentType argumentType;
         if (String.class.getName().equals(type)) {
-            argumentType = ArgumentType.REQUIRED_STRING;
+            argumentType = annotation.required() ? ArgumentType.REQUIRED_STRING : ArgumentType.OPTIONAL_STRING;
         } else if (BigDecimal.class.getName().equals(type)) {
-            argumentType = ArgumentType.REQUIRED_NUMERIC;
+            argumentType = annotation.required() ? ArgumentType.REQUIRED_NUMERIC : ArgumentType.OPTIONAL_NUMERIC;
         } else {
             throw new IllegalArgumentException("Unsupported arg type: " + type);
         }
@@ -32,10 +31,10 @@ public class MethodArgumentVisitor extends BasicVisitor<Argument, Void> {
         var arg = new Argument();
         arg.setArgumentType(argumentType);
 
-        if (annotation.value().length == 0) {
-            arg.getArgumentNames().add(e.getSimpleName().toString());
+        if (annotation.value().length() == 0) {
+            arg.setArgumentName(e.getSimpleName().toString());
         } else {
-            arg.getArgumentNames().addAll(Arrays.asList(annotation.value()));
+            arg.setArgumentName(annotation.value());
         }
 
         return arg;
