@@ -6,6 +6,7 @@ import org.svgroz.slim.processor.model.ArgumentType;
 
 import javax.lang.model.element.VariableElement;
 import java.math.BigDecimal;
+import java.util.Arrays;
 
 /**
  * @author Simon Grozovsky svgroz@outlook.com
@@ -13,7 +14,8 @@ import java.math.BigDecimal;
 public class MethodArgumentVisitor extends BasicVisitor<Argument, Void> {
     @Override
     public Argument visitVariable(final VariableElement e, final Void unused) {
-        if (e.getAnnotation(Parameter.class) == null) {
+        final Parameter annotation = e.getAnnotation(Parameter.class);
+        if (annotation == null) {
             throw new IllegalArgumentException("All method arguments has to have @" + Parameter.class.getName());
         }
 
@@ -29,6 +31,13 @@ public class MethodArgumentVisitor extends BasicVisitor<Argument, Void> {
 
         var arg = new Argument();
         arg.setArgumentType(argumentType);
+
+        if (annotation.value().length == 0) {
+            arg.getArgumentNames().add(e.getSimpleName().toString());
+        } else {
+            arg.getArgumentNames().addAll(Arrays.asList(annotation.value()));
+        }
+
         return arg;
     }
 }

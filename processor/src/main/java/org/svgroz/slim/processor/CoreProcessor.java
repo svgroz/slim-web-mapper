@@ -1,5 +1,11 @@
 package org.svgroz.slim.processor;
 
+import freemarker.cache.ClassTemplateLoader;
+import freemarker.template.Configuration;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.svgroz.slim.api.Controller;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -13,7 +19,11 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
+import java.io.IOException;
+import java.io.StringWriter;
 import java.lang.annotation.Annotation;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -22,6 +32,13 @@ import java.util.stream.Collectors;
  */
 public class CoreProcessor extends AbstractProcessor {
     private final Set<Class<? extends Annotation>> supportedClasses = Set.of(Controller.class);
+
+    private final Configuration templateConfig;
+
+    public CoreProcessor() {
+        this.templateConfig = new Configuration(Configuration.VERSION_2_3_31);
+        this.templateConfig.setTemplateLoader(new ClassTemplateLoader(getClass(), "/templates"));
+    }
 
     private Types typeUtils;
     private Elements elementUtils;
@@ -43,7 +60,24 @@ public class CoreProcessor extends AbstractProcessor {
 
         for (final Element element : roundEnv.getElementsAnnotatedWithAny(supportedClasses)) {
             var ctx = visitor.visit(element);
-            messager.printMessage(Diagnostic.Kind.OTHER, ctx.toString());
+            ctx.getImports().addAll(
+                    Set.of(
+                            HttpServlet.class.getName(),
+                            ServletException.class.getName(),
+                            HttpServletRequest.class.getName(),
+                            HttpServletResponse.class.getName(),
+                            IOException.class.getName(),
+                            Optional.class.getName()
+                    )
+            );
+
+            try {
+                var writer = new StringWriter();
+                templateConfig.getTemplate("HttpServletMapping.ftl").process(Map.of("ctx", ctx), writer);
+                messager.printMessage(Diagnostic.Kind.OTHER, "\n" + writer.toString());
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
         }
 
         return false;

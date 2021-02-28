@@ -3,7 +3,6 @@ package org.svgroz;
 import org.svgroz.slim.api.Controller;
 import org.svgroz.slim.api.Get;
 import org.svgroz.slim.api.Parameter;
-import org.svgroz.slim.api.Post;
 
 import java.math.BigDecimal;
 
@@ -12,9 +11,8 @@ import java.math.BigDecimal;
  */
 @Controller
 public interface Foo {
-    @Get
-    void doGetInFoo(@Parameter String x);
 
-    @Post
-    void doPostInFoo(@Parameter String y, @Parameter BigDecimal z);
+
+    @Get
+    void doPostInFoo(@Parameter("p1") String y, @Parameter("p2") BigDecimal z);
 }
