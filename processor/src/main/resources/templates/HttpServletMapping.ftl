@@ -26,33 +26,15 @@ public class ${ctx.className}ControllerServletIpml extends HttpServlet {
     </#list>
 
     <#if ctx.getMethods?size != 0>
-    @Override
-    protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
-        final String reqPath = req.getRequestURI();
-        <#list ctx.getMethods as get>
-        if (_${get.methodName}GetMappings.contains(reqPath)) {
-        <#list get.argumentList as arg>
-            var _${arg.argumentName} = ${argTypeToMethod[arg.argumentType]}("${arg.argumentName}", req);
-        </#list>
-            ${ctx.className?uncap_first}.${get.methodName}(<#list get.argumentList as arg>_${arg.argumentName}<#sep>, </#sep></#list>);
-        }
-        </#list>
-    }
+    <#assign methodName = "doGet"/>
+    <#assign methods = ctx.getMethods />
+    <#include "doMethod.ftl"/>
     </#if>
 
-    <#if ctx.postMethods?size != 0>
-    @Override
-    protected void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
-         final String reqPath = req.getRequestURI();
-         <#list ctx.postMethods as post>
-         if (_${post.methodName}PostMappings.contains(reqPath)) {
-         <#list post.argumentList as arg>
-             var _${arg.argumentName} = ${argTypeToMethod[arg.argumentType]}("${arg.argumentName}", req);
-         </#list>
-             ${ctx.className?uncap_first}.${post.methodName}(<#list post.argumentList as arg>_${arg.argumentName}<#sep>, </#sep></#list>);
-         }
-         </#list>
-    }
+    <#if ctx.getMethods?size != 0>
+    <#assign methodName = "doPost"/>
+    <#assign methods = ctx.postMethods />
+    <#include "doMethod.ftl"/>
     </#if>
 
     protected String getRequiredString(String name, HttpServletRequest req) {
