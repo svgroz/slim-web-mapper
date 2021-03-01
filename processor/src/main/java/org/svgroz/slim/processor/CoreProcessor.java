@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.svgroz.slim.api.Controller;
+import org.svgroz.slim.mapper.RequestParameterMapper;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
@@ -24,12 +25,8 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.annotation.Annotation;
-import java.math.BigDecimal;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 /**
@@ -72,11 +69,8 @@ public class CoreProcessor extends AbstractProcessor {
                             HttpServletRequest.class.getName(),
                             HttpServletResponse.class.getName(),
                             IOException.class.getName(),
-                            Optional.class.getName(),
                             Set.class.getName(),
-                            SortedSet.class.getName(),
-                            TreeSet.class.getName(),
-                            BigDecimal.class.getName()
+                            RequestParameterMapper.class.getName()
                     )
             );
 

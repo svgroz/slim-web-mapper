@@ -4,7 +4,7 @@
         <#list methods as method>
         if (_${method.methodName}GetMappings.contains(reqPath)) {
         <#list method.argumentList as arg>
-            var _${arg.argumentName} = ${argTypeToMethod[arg.argumentType]}("${arg.argumentName}", req);
+            var _${arg.argumentName} = RequestParameterMapper.${argTypeToMethod[arg.argumentType]}("${arg.argumentName}", req);
         </#list>
             ${ctx.className?uncap_first}.${method.methodName}(<#list method.argumentList as arg>_${arg.argumentName}<#sep>, </#sep></#list>);
         }

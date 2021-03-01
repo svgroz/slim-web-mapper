@@ -36,20 +36,4 @@ public class ${ctx.className}ControllerServletIpml extends HttpServlet {
     <#assign methods = ctx.postMethods />
     <#include "doMethod.ftl"/>
     </#if>
-
-    protected String getRequiredString(String name, HttpServletRequest req) {
-        return Optional.ofNullable(req.getParameter(name)).orElseThrow();
-    }
-
-    protected String getOptionalString(String name, HttpServletRequest req) {
-        return Optional.ofNullable(req.getParameter(name)).orElseThrow();
-    }
-
-    protected BigDecimal getRequiredNumeric(String name, HttpServletRequest req) {
-        return Optional.ofNullable(req.getParameter(name)).map(BigDecimal::new).orElseThrow();
-    }
-
-    protected BigDecimal getOptionalNumeric(String name, HttpServletRequest req) {
-        return Optional.ofNullable(req.getParameter(name)).map(BigDecimal::new).orElse(null);
-    }
 }
