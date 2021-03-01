@@ -36,4 +36,8 @@ public class ${ctx.className}ControllerServletIpml extends HttpServlet {
     <#assign methods = ctx.postMethods />
     <#include "doMethod.ftl"/>
     </#if>
+
+    public void set${ctx.className}(${ctx.className} ${ctx.className?uncap_first}) {
+        this.${ctx.className?uncap_first} = ${ctx.className?uncap_first};
+    }
 }
