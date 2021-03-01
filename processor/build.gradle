@@ -1,5 +1,5 @@
 dependencies {
-    implementation(project(":api"))
+    implementation(project(":core"))
     implementation group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: '5.0.0'
     implementation group: 'org.freemarker', name: 'freemarker', version: '2.3.31'
 }
