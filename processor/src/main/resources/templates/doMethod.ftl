@@ -6,7 +6,7 @@
         <#list method.argumentList as arg>
             var _${arg.argumentName} = RequestParameterMapper.${argTypeToMethod[arg.argumentType]}("${arg.argumentName}", req);
         </#list>
-            ${ctx.className?uncap_first}.${method.methodName}(<#list method.argumentList as arg>_${arg.argumentName}<#sep>, </#sep></#list>);
+            target.${method.methodName}(<#list method.argumentList as arg>_${arg.argumentName}<#sep>, </#sep></#list>);
         }
         </#list>
     }

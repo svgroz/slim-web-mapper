@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.svgroz.slim.api.Controller;
 import org.svgroz.slim.mapper.RequestParameterMapper;
+import org.svgroz.slim.servlet.BasicServlet;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
@@ -70,7 +71,8 @@ public class CoreProcessor extends AbstractProcessor {
                             HttpServletResponse.class.getName(),
                             IOException.class.getName(),
                             Set.class.getName(),
-                            RequestParameterMapper.class.getName()
+                            RequestParameterMapper.class.getName(),
+                            BasicServlet.class.getName()
                     )
             );
 
