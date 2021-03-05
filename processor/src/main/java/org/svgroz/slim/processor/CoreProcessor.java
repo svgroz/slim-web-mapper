@@ -27,7 +27,9 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.annotation.Annotation;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -72,7 +74,10 @@ public class CoreProcessor extends AbstractProcessor {
                             IOException.class.getName(),
                             Set.class.getName(),
                             RequestParameterMapper.class.getName(),
-                            BasicServlet.class.getName()
+                            BasicServlet.class.getName(),
+                            Map.class.getName(),
+                            Function.class.getName(),
+                            Optional.class.getName()
                     )
             );
 
