@@ -24,11 +24,19 @@ public class RootVisitor extends BasicVisitor<Context, Void> {
 
     @Override
     public Context visitType(final TypeElement e, final Void unused) {
-        if (e.getAnnotation(Controller.class) != null && !e.getKind().isInterface()) {
+        final Controller controller = e.getAnnotation(Controller.class);
+        if (controller != null && !e.getKind().isInterface()) {
             throw new IllegalArgumentException("Only interfaces supported for @" + Controller.class.getName());
         }
 
         var ctx = new Context();
+
+        var rootUrl = controller.value();
+        rootUrl = rootUrl.isEmpty() ? "/" : rootUrl;
+        rootUrl = rootUrl.startsWith("/") ? rootUrl : "/" + rootUrl;
+        rootUrl = rootUrl.length() != 1  && rootUrl.endsWith("/") ? rootUrl.substring(0, rootUrl.length() - 1) : rootUrl;
+
+        ctx.setRootUrl(rootUrl);
         var className = e.getSimpleName().toString();
         ctx.setClassName(className);
         var packageName = e.getEnclosingElement().accept(new PackageVisitor(), null).orElseThrow(() -> new IllegalArgumentException("Could not find package of: " + e));

@@ -9,71 +9,14 @@ public class ${ctx.className}ControllerServletIpml extends HttpServlet implement
     private ${ctx.className} target;
     private Function<Object, byte[]> serializer;
 
-    private final Map<String, Function<HttpServletRequest, Optional<Object>>> getMappings = Map.ofEntries(
-    <#list ctx.getMethods as method>
-            Map.entry("${method.methodName}", this::doGet_${method.methodName})<#sep>,</#sep>
-    </#list>
-    );
+    <#assign prefix = "doGet"/>
+    <#assign methods = ctx.getMethods/>
+    <#include "Method.ftl"/>
 
-    private final Map<String, Function<HttpServletRequest, Optional<Object>>> postMappings = Map.ofEntries(
-    <#list ctx.postMethods as method>
-            Map.entry("${method.methodName}", this::doPost_${method.methodName})<#sep>,</#sep>
-    </#list>
-    );
 
-    @Override
-    protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
-        final var reqPath = req.getRequestURI();
-        final var mappedFunction = getMappings.get(reqPath);
-
-        if (mappedFunction == null) {
-            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-
-        mappedFunction.apply(req)
-                .map(serializer)
-                .ifPresentOrElse(
-                        r -> {
-                            resp.setStatus(HttpServletResponse.SC_OK);
-                            try {
-                                resp.getOutputStream().write(r);
-                            } catch (IOException ex) {
-                                throw new RuntimeException(ex);
-                            }
-                        },
-                        () -> {
-                            resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
-                        }
-                );
-    }
-
-    @Override
-    protected void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
-        final var reqPath = req.getRequestURI();
-        final var mappedFunction = getMappings.get(reqPath);
-
-        if (mappedFunction == null) {
-            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-
-        mappedFunction.apply(req)
-                .map(serializer)
-                .ifPresentOrElse(
-                        r -> {
-                            resp.setStatus(HttpServletResponse.SC_OK);
-                            try {
-                                resp.getOutputStream().write(r);
-                            } catch (IOException ex) {
-                                throw new RuntimeException(ex);
-                            }
-                        },
-                        () -> {
-                            resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
-                        }
-                );
-    }
+    <#assign prefix = "doPost"/>
+    <#assign methods = ctx.postMethods/>
+    <#include "Method.ftl"/>
 
     @Override
     public void setTarget(${ctx.className} target) {

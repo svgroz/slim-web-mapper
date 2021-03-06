@@ -6,7 +6,6 @@ import org.svgroz.slim.processor.model.Method;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
-import java.util.Arrays;
 
 /**
  * @author Simon Grozovsky svgroz@outlook.com
@@ -31,7 +30,19 @@ public class MethodVisitor extends BasicVisitor<Method, HttpMethodType> {
                 throw new UnsupportedOperationException();
         }
 
-        method.getUrls().addAll(Arrays.asList(urls));
+        for (String url : urls) {
+            if (url.startsWith("/")) {
+                url = url.substring(1);
+            }
+            if (!url.startsWith("/")) {
+                url = "/" + url;
+            }
+            if (!url.endsWith("/")) {
+                url = url + "/";
+            }
+            method.getUrls().add(url);
+        }
+
         method.setVoid("void".equals(e.getReturnType().toString()));
 
         for (final Element enclosedElement : e.getParameters()) {

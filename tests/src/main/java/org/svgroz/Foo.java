@@ -11,9 +11,9 @@ import java.util.Map;
 /**
  * @author Simon Grozovsky svgroz@outlook.com
  */
-@Controller
+@Controller("/Foo")
 public interface Foo {
-    @Get("hello1")
+    @Get("/hello1")
     void doGetInFoo(@Parameter(value = "p1") String x);
 
     @Post("hello2")
