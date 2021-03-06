@@ -9,7 +9,6 @@ import javax.annotation.processing.Messager;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
-import javax.tools.Diagnostic;
 import java.util.Objects;
 
 /**
@@ -57,9 +56,6 @@ public class RootVisitor extends BasicVisitor<Context, Void> {
                 ctx.addMethod(enclosedElement.accept(new MethodVisitor(), HttpMethodType.POST));
             }
         }
-
-        messager.printMessage(Diagnostic.Kind.OTHER, "Class name is " + className);
-        messager.printMessage(Diagnostic.Kind.OTHER, "Package name is " + packageName);
 
         return ctx;
     }
