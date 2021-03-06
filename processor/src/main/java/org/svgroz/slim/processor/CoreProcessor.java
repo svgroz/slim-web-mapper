@@ -3,6 +3,7 @@ package org.svgroz.slim.processor;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.template.Configuration;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,7 +22,6 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
-import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -79,7 +79,8 @@ public class CoreProcessor extends AbstractProcessor {
                             Map.class.getName(),
                             Function.class.getName(),
                             Optional.class.getName(),
-                            RequestResponseUtils.class.getName()
+                            RequestResponseUtils.class.getName(),
+                            WebServlet.class.getName()
                     )
             );
 
@@ -87,7 +88,6 @@ public class CoreProcessor extends AbstractProcessor {
                 var writer = new StringWriter();
                 templateConfig.getTemplate("HttpServletMapping.ftl").process(Map.of("ctx", ctx), writer);
                 String classData = writer.toString();
-                messager.printMessage(Diagnostic.Kind.OTHER, "\n" + classData);
                 JavaFileObject classFile = filer.createSourceFile(ctx.getPackageName() + "." + ctx.getClassName() + "ControllerServletIpml");
                 Writer classWriter = classFile.openWriter();
                 classWriter.write(classData);

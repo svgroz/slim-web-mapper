@@ -11,7 +11,8 @@ import java.util.TreeSet;
  */
 public class Method {
     private String methodName;
-    private final SortedSet<String> urls = new TreeSet<>();
+    private final SortedSet<String> getUrls = new TreeSet<>();
+    private final SortedSet<String> postUrls = new TreeSet<>();
     private final List<Argument> argumentList = new ArrayList<>();
     private boolean isVoid = true;
 
@@ -23,8 +24,12 @@ public class Method {
         this.methodName = methodName;
     }
 
-    public SortedSet<String> getUrls() {
-        return urls;
+    public SortedSet<String> getGetUrls() {
+        return getUrls;
+    }
+
+    public SortedSet<String> getPostUrls() {
+        return postUrls;
     }
 
     public List<Argument> getArgumentList() {
@@ -43,7 +48,8 @@ public class Method {
     public String toString() {
         return new StringJoiner(", ", Method.class.getSimpleName() + "[", "]")
                 .add("methodName='" + methodName + "'")
-                .add("urls=" + urls)
+                .add("getUrls=" + getUrls)
+                .add("postUrls=" + postUrls)
                 .add("argumentList=" + argumentList)
                 .add("isVoid=" + isVoid)
                 .toString();

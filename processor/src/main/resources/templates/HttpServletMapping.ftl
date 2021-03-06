@@ -5,18 +5,52 @@ package ${ctx.packageName};
 import ${import};
 </#list>
 
+@WebServlet(urlPatterns = {
+    <#list ctx.rootUrls as rootUrl>
+    "${rootUrl}"<#sep>,</#sep>
+    </#list>
+})
 public class ${ctx.className}ControllerServletIpml extends HttpServlet implements BasicServlet<${ctx.className}> {
     private ${ctx.className} target;
     private Function<Object, byte[]> serializer;
 
-    <#assign prefix = "doGet"/>
-    <#assign methods = ctx.getMethods/>
-    <#include "Method.ftl"/>
+    @Override
+    protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
+        final var reqPath = RequestResponseUtils.getNormalizedRequestUrl(req);
+        switch (reqPath) {
+            <#list ctx.methods as method>
+            <#if method.getUrls?has_content>
+            <#list method.getUrls as url>
+            case "${url}":
+            </#list>
+                RequestResponseUtils.processFunction(req, resp, this::_${method.methodName}, serializer);
+                return;
+            </#if>
+            </#list>
+            default:
+                RequestResponseUtils.handleNotFound(resp);
+                return;
+        }
+    }
 
-
-    <#assign prefix = "doPost"/>
-    <#assign methods = ctx.postMethods/>
-    <#include "Method.ftl"/>
+    @Override
+    protected void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
+        final var reqPath = RequestResponseUtils.getNormalizedRequestUrl(req);
+        switch (reqPath) {
+            <#list ctx.methods as method>
+            <#if method.postUrls?has_content>
+            <#list method.postUrls as url>
+            case "${url}":
+            </#list>
+                RequestResponseUtils.processFunction(req, resp, this::_${method.methodName}, serializer);
+                return;
+            </#if>
+            </#list>
+            default:
+                RequestResponseUtils.handleNotFound(resp);
+                return;
+        }
+    }
 
     @Override
     public void setTarget(${ctx.className} target) {
@@ -27,14 +61,8 @@ public class ${ctx.className}ControllerServletIpml extends HttpServlet implement
     public void setSerializer(Function<Object, byte[]> serializer) {
         this.serializer = serializer;
     }
-    <#list ctx.getMethods as method>
-    <#assign prefix = "doGet"/>
-
-    <#include "InternalMethod.ftl"/>
-
-    </#list>
-    <#list ctx.postMethods as method>
-    <#assign prefix = "doPost"/>
+    <#list ctx.methods as method>
+    <#assign prefix = "_"/>
 
     <#include "InternalMethod.ftl"/>
 

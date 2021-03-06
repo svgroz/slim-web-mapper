@@ -30,6 +30,7 @@ public class RequestResponseUtils {
             byte[] rawResult = serializer.apply(result.get());
             try {
                 response.getOutputStream().write(rawResult);
+                response.setHeader("Content-Type", "application/json;charset=UTF-8");
                 response.setStatus(HttpServletResponse.SC_OK);
             } catch (IOException ex) {
                 LOG.warn("", ex);
@@ -42,5 +43,13 @@ public class RequestResponseUtils {
 
     public static void handleNotFound(HttpServletResponse response) {
         response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+    }
+
+    public static String getNormalizedRequestUrl(HttpServletRequest request) {
+        String requestURI = request.getRequestURI();
+        if (requestURI.endsWith("/")) {
+            return requestURI.substring(0, requestURI.length() - 1);
+        }
+        return requestURI;
     }
 }

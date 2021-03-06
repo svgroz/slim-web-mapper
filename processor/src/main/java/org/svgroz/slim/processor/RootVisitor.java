@@ -25,18 +25,20 @@ public class RootVisitor extends BasicVisitor<Context, Void> {
     @Override
     public Context visitType(final TypeElement e, final Void unused) {
         final Controller controller = e.getAnnotation(Controller.class);
-        if (controller != null && !e.getKind().isInterface()) {
+        if (!e.getKind().isInterface()) {
             throw new IllegalArgumentException("Only interfaces supported for @" + Controller.class.getName());
         }
 
         var ctx = new Context();
 
-        var rootUrl = controller.value();
-        rootUrl = rootUrl.isEmpty() ? "/" : rootUrl;
-        rootUrl = rootUrl.startsWith("/") ? rootUrl : "/" + rootUrl;
-        rootUrl = rootUrl.length() != 1  && rootUrl.endsWith("/") ? rootUrl.substring(0, rootUrl.length() - 1) : rootUrl;
+        var rootUrls = controller.value();
+        for (String rootUrl : rootUrls) {
+            rootUrl = rootUrl.isEmpty() ? "/" : rootUrl;
+            rootUrl = rootUrl.startsWith("/") ? rootUrl : "/" + rootUrl;
+            rootUrl = rootUrl.length() != 1  && rootUrl.endsWith("/") ? rootUrl.substring(0, rootUrl.length() - 1) : rootUrl;
+            ctx.getRootUrls().add(rootUrl);
+        }
 
-        ctx.setRootUrl(rootUrl);
         var className = e.getSimpleName().toString();
         ctx.setClassName(className);
         var packageName = e.getEnclosingElement().accept(new PackageVisitor(), null).orElseThrow(() -> new IllegalArgumentException("Could not find package of: " + e));
@@ -48,11 +50,11 @@ public class RootVisitor extends BasicVisitor<Context, Void> {
             }
 
             if (enclosedElement.getAnnotation(Get.class) != null) {
-                ctx.getGetMethods().add(enclosedElement.accept(new MethodVisitor(), HttpMethodType.GET));
+                ctx.addMethod(enclosedElement.accept(new MethodVisitor(), HttpMethodType.GET));
             }
 
             if (enclosedElement.getAnnotation(Post.class) != null) {
-                ctx.getPostMethods().add(enclosedElement.accept(new MethodVisitor(), HttpMethodType.POST));
+                ctx.addMethod(enclosedElement.accept(new MethodVisitor(), HttpMethodType.POST));
             }
         }
 

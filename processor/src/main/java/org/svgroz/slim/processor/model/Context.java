@@ -2,6 +2,8 @@ package org.svgroz.slim.processor.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.StringJoiner;
 import java.util.TreeSet;
@@ -12,10 +14,9 @@ import java.util.TreeSet;
 public class Context {
     private String packageName;
     private String className;
-    private String rootUrl;
+    private SortedSet<String> rootUrls = new TreeSet<>();
     private final SortedSet<String> imports = new TreeSet<>();
-    private final List<Method> getMethods = new ArrayList<>();
-    private final List<Method> postMethods = new ArrayList<>();
+    private final List<Method> methods = new ArrayList<>();
 
     public String getPackageName() {
         return packageName;
@@ -25,12 +26,8 @@ public class Context {
         this.packageName = packageName;
     }
 
-    public String getRootUrl() {
-        return rootUrl;
-    }
-
-    public void setRootUrl(final String rootUrl) {
-        this.rootUrl = rootUrl;
+    public Set<String> getRootUrls() {
+        return rootUrls;
     }
 
     public SortedSet<String> getImports() {
@@ -45,12 +42,20 @@ public class Context {
         this.className = className;
     }
 
-    public List<Method> getGetMethods() {
-        return getMethods;
+    public List<Method> getMethods() {
+        return methods;
     }
 
-    public List<Method> getPostMethods() {
-        return postMethods;
+    public void addMethod(Method method) {
+        Optional<Method> first = methods.stream().filter(m -> m.getMethodName().equals(method.getMethodName()))
+                .findFirst();
+        if (first.isEmpty()) {
+            methods.add(method);
+            return;
+        }
+
+        first.get().getGetUrls().addAll(method.getGetUrls());
+        first.get().getPostUrls().addAll(method.getPostUrls());
     }
 
     @Override
@@ -58,10 +63,8 @@ public class Context {
         return new StringJoiner(", ", Context.class.getSimpleName() + "[", "]")
                 .add("packageName='" + packageName + "'")
                 .add("className='" + className + "'")
-                .add("rootUrl='" + rootUrl + "'")
+                .add("rootUrls='" + rootUrls + "'")
                 .add("imports=" + imports)
-                .add("getMethods=" + getMethods)
-                .add("postMethods=" + postMethods)
                 .toString();
     }
 }

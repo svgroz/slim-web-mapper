@@ -1,4 +1,4 @@
-    private Optional<Object> ${prefix}_${method.methodName}(final HttpServletRequest req) {
+    private Optional<Object> ${prefix}${method.methodName}(final HttpServletRequest req) {
         <#list method.argumentList as arg>
         final var _${arg.argumentName} = RequestParameterMapper.${argTypeToMethod[arg.argumentType]}("${arg.argumentName}", req);
         </#list>
